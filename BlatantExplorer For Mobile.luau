@@ -1156,7 +1156,7 @@ function Explorer:BuildUI()
             Position = UDim2.new(0, 8, 0, 56),
             BackgroundColor3 = Theme.Hi,
             BorderSizePixel = 0,
-            Text = "🔍",
+            Text = "Toggle",
             TextSize = 20,
             Font = Enum.Font.GothamBold,
             TextColor3 = Color3.new(1, 1, 1),
