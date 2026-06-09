@@ -1,0 +1,119 @@
+local REPO_URL = "https://raw.githubusercontent.com/Ahma174/Scripts/main/Inner%20Peace%20Legion/"
+local MODEL_NAME = "Inner Peace Legion"
+
+local HttpService = game:GetService("HttpService")
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+
+local ScreenGui = Instance.new("ScreenGui")
+ScreenGui.Name = "Inner Peace Legion"
+ScreenGui.ResetOnSpawn = false
+ScreenGui.Parent = game:GetService("CoreGui")
+
+local Frame = Instance.new("Frame")
+Frame.Size = UDim2.new(0, 220, 0, 340)
+Frame.Position = UDim2.new(0.5, -110, 0.4, -170)
+Frame.BackgroundColor3 = Color3.fromRGB(25, 25, 35)
+Frame.BorderSizePixel = 0
+Frame.Active = true
+Frame.Draggable = true
+Frame.Parent = ScreenGui
+
+local UICorner = Instance.new("UICorner")
+UICorner.CornerRadius = UDim.new(0, 8)
+UICorner.Parent = Frame
+
+local Title = Instance.new("TextLabel")
+Title.Size = UDim2.new(1, 0, 0, 40)
+Title.BackgroundTransparency = 1
+Title.Text = "Inner Peace Legion"
+Title.TextColor3 = Color3.fromRGB(255, 255, 255)
+Title.TextSize = 16
+Title.Font = Enum.Font.SourceSansBold
+Title.Parent = Frame
+
+local UIListLayout = Instance.new("UIListLayout")
+UIListLayout.Padding = UDim.new(0, 6)
+UIListLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
+UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
+
+local ButtonContainer = Instance.new("Frame")
+ButtonContainer.Size = UDim2.new(1, 0, 1, -45)
+ButtonContainer.Position = UDim2.new(0, 0, 0, 40)
+ButtonContainer.BackgroundTransparency = 1
+ButtonContainer.Parent = Frame
+UIListLayout.Parent = ButtonContainer
+
+local function executeScript(slotNumber)
+    local suffix = ""
+    if slotNumber == 1 then suffix = "1st"
+    elseif slotNumber == 2 then suffix = "2nd"
+    elseif slotNumber == 3 then suffix = "3rd"
+    elseif slotNumber == 4 then suffix = "4th"
+    elseif slotNumber == 5 then suffix = "5th"
+    elseif slotNumber == 6 then suffix = "6th"
+    end
+    
+    local fileName = suffix .. "Slot.lua"
+    local fullUrl = REPO_URL .. fileName
+
+    local success, scriptContent = pcall(function()
+        return game:HttpGet(fullUrl)
+    end)
+
+    if success and scriptContent then
+        task.spawn(function()
+            local runSuccess, err = pcall(function()
+                loadstring(scriptContent)()
+            end)
+            if not runSuccess then
+                warn("Error running " .. fileName .. ": " .. tostring(err))
+            end
+        end)
+    else
+        warn("Failed to fetch script from GitHub: " .. fileName)
+    end
+end
+
+local function cleanupCharacterModels()
+    local character = LocalPlayer.Character
+    if character then
+        for _, child in ipairs(character:GetChildren()) do
+            if child.Name == MODEL_NAME then
+                child:Destroy()
+            end
+        end
+        task.wait(0.1)
+    end
+end
+
+for i = 1, 6 do
+    local Button = Instance.new("TextButton")
+    Button.Size = UDim2.new(0, 190, 0, 38)
+    Button.BackgroundColor3 = Color3.fromRGB(40, 40, 55)
+    Button.Text = "Execute " .. i .. " Slot" .. (i > 1 and "s" or "")
+    Button.TextColor3 = Color3.fromRGB(230, 230, 230)
+    Button.TextSize = 14
+    Button.Font = Enum.Font.SourceSans
+    Button.BorderSizePixel = 0
+    Button.LayoutOrder = i
+    Button.Parent = ButtonContainer
+
+    local BtnCorner = Instance.new("UICorner")
+    BtnCorner.CornerRadius = UDim.new(0, 5)
+    BtnCorner.Parent = Button
+
+    Button.MouseEnter:Connect(function()
+        Button.BackgroundColor3 = Color3.fromRGB(50, 50, 70)
+    end)
+    Button.MouseLeave:Connect(function()
+        Button.BackgroundColor3 = Color3.fromRGB(40, 40, 55)
+    end)
+
+    Button.MouseButton1Click:Connect(function()
+        cleanupCharacterModels()
+        for currentSlot = 1, i do
+            executeScript(currentSlot)
+        end
+    end)
+end
