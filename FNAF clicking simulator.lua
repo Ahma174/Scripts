@@ -1,4 +1,7 @@
 local coregui = game:GetService("CoreGui")
+local link = "https://raw.githubusercontent.com/Ahma174/Scripts/refs/heads/main/config.txt"
+
+local storage = {[1] = "Value"}
 
 local gui = Instance.new("ScreenGui")
 gui.Name = "ClickingGUI"
@@ -6,8 +9,7 @@ gui.Parent = coregui
 
 local fr = Instance.new("Frame")
 fr.Position = UDim2.new(0.5, -122, 0.5, -233)
-fr.Size = UDim2.new(0, 250,  0, 175)
-fr.Draggable = true
+fr.Size = UDim2.new(0, 300,  0, 175)
 fr.Parent = gui
 
 local b = Instance.new("TextButton")
@@ -17,7 +19,25 @@ b.Size = UDim2.new(0, 100, 0, 170)
 b.Text = "Click Here"
 b.Parent = fr
 
+local SC = Instance.new("TextButton")
+SC.Name = "Save Config"
+SC.Position = UDim2.new(0, 235, 0, 18)
+SC.Size = UDim2.new(0, 65, 0, 30)
+SC.Text = "Save Config"
+SC.Parent = fr
+
+local LC = Instance.new("TextButton")
+LC.Name = "Load Config"
+LC.Position = UDim2.new(0, 235, 0, 49)
+LC.Size = UDim2.new(0, 65, 0, 30)
+LC.Text = "Load Config"
+LC.Parent = fr
+
 -- needed instances
+
+local UICD = Instance.new("UIDragDetector") -- Used For the Dragging Logic
+UICD.Parent = fr
+
 local click = Instance.new("Sound")
 click.Name = "ClickSound"
 click.SoundId = "rbxassetid://138567614125924"
@@ -115,6 +135,16 @@ Valley.Value = 0
 h.Text = "Clicking Simulator Value: ".. Valley.Value
 end)
 
+SC.Activated:Connect(function()
+writefile("config.txt", "".. Valley.Value)
+end)
+
+LC.Activated:Connect(function()
+local reading = readfile("config.txt")
+Valley.Value = reading
+h.Text = "Clicking Simulator Value: ".. Valley.Value
+end)
+
 ab.Activated:Connect(function()
 ib.Image = "rbxassetid://7231005994"
 ib.Name = "BONNIE"
@@ -139,3 +169,9 @@ ag.Activated:Connect(function()
 ib.Image = "rbxassetid://5185798268"
 ib.Name = "GOLDEN FREDDY"
 end)
+
+if storage[1] ~= "Value" then
+    print("Where's the Value?")
+    task.wait(1)
+    gui:Destroy()
+end
