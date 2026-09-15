@@ -142,11 +142,13 @@ local VisibilityCheckDispatcher = game:GetService("VisibilityCheckDispatcher")
 local Visit = game:GetService("Visit")
 local WebViewService = game:GetService("WebViewService")
 local NilInstances = [[
-local getNil = function(name, class) for _, v in next, getnilinstances() do 
- if v.ClassName == class and v.Name == name then 
-  return v 
-end 
-end 
+local getNil = function(name, class) 
+  for _, v in next, getnilinstances() do 
+    if v.ClassName == class and v.Name == name then 
+    return v 
+   end 
+ end 
+end
 
 getNil("Nil Instances", "Folder")
 ]]
