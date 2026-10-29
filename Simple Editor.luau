@@ -52,6 +52,7 @@ TU.Parent = T
 
 local Box = Instance.new("TextBox")
 Box.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+Box.MultiLine = true
 Box.Position = UDim2.new(0, 0, 0, 55)
 Box.Size = UDim2.new(0, 550, 0, 185)
 Box.ClearTextOnFocus = false
